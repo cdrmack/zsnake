@@ -1,0 +1,5 @@
+Minimalistic snake clone. Expects [[https://github.com/raysan5/raylib][raylib]] in the host system.
+
+#+begin_src shell
+  zig build run
+#+end_src
