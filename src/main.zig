@@ -21,6 +21,28 @@ fn makeRectangle(x: f32, y: f32, width: f32, height: f32) ray.Rectangle {
     };
 }
 
+fn snakeTeleportOnEdge(snake: *Snake) void {
+    if (snake.rectangle.y < 0) {
+        snake.rectangle.y = screen_height;
+        return;
+    }
+
+    if (snake.rectangle.x < 0) {
+        snake.rectangle.x = screen_width;
+        return;
+    }
+
+    if (snake.rectangle.y > screen_height) {
+        snake.rectangle.y = 0;
+        return;
+    }
+
+    if (snake.rectangle.x > screen_width) {
+        snake.rectangle.x = 0;
+        return;
+    }
+}
+
 fn snakeTick(snake: *Snake) void {
     switch (snake.direction) {
         Direction.up => {
@@ -36,6 +58,8 @@ fn snakeTick(snake: *Snake) void {
             snake.rectangle.x += snake_cell_size;
         },
     }
+
+    snakeTeleportOnEdge(snake);
 }
 
 pub fn main() void {
