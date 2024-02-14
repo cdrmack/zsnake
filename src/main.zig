@@ -10,7 +10,56 @@ const snake_cell_size = 10;
 
 const Direction = enum { up, down, left, right };
 
-const Snake = struct { rectangle: ray.Rectangle, direction: Direction, color: ray.Color };
+const Snake = struct {
+    rectangle: ray.Rectangle,
+    direction: Direction,
+    color: ray.Color,
+
+    fn teleportOnEdge(self: *Snake) void {
+        if (self.rectangle.y < 0) {
+            self.rectangle.y = screen_height;
+            return;
+        }
+
+        if (self.rectangle.x < 0) {
+            self.rectangle.x = screen_width;
+            return;
+        }
+
+        if (self.rectangle.y > screen_height) {
+            self.rectangle.y = 0;
+            return;
+        }
+
+        if (self.rectangle.x > screen_width) {
+            self.rectangle.x = 0;
+            return;
+        }
+    }
+
+    fn tick(self: *Snake) void {
+        switch (self.direction) {
+            Direction.up => {
+                self.rectangle.y -= snake_cell_size;
+            },
+            Direction.down => {
+                self.rectangle.y += snake_cell_size;
+            },
+            Direction.left => {
+                self.rectangle.x -= snake_cell_size;
+            },
+            Direction.right => {
+                self.rectangle.x += snake_cell_size;
+            },
+        }
+
+        teleportOnEdge(self);
+    }
+
+    fn render(self: *Snake) void {
+        ray.DrawRectangleRec(self.rectangle, self.color);
+    }
+};
 
 fn makeRectangle(x: f32, y: f32, width: f32, height: f32) ray.Rectangle {
     return ray.Rectangle{
@@ -19,47 +68,6 @@ fn makeRectangle(x: f32, y: f32, width: f32, height: f32) ray.Rectangle {
         .width = width,
         .height = height,
     };
-}
-
-fn snakeTeleportOnEdge(snake: *Snake) void {
-    if (snake.rectangle.y < 0) {
-        snake.rectangle.y = screen_height;
-        return;
-    }
-
-    if (snake.rectangle.x < 0) {
-        snake.rectangle.x = screen_width;
-        return;
-    }
-
-    if (snake.rectangle.y > screen_height) {
-        snake.rectangle.y = 0;
-        return;
-    }
-
-    if (snake.rectangle.x > screen_width) {
-        snake.rectangle.x = 0;
-        return;
-    }
-}
-
-fn snakeTick(snake: *Snake) void {
-    switch (snake.direction) {
-        Direction.up => {
-            snake.rectangle.y -= snake_cell_size;
-        },
-        Direction.down => {
-            snake.rectangle.y += snake_cell_size;
-        },
-        Direction.left => {
-            snake.rectangle.x -= snake_cell_size;
-        },
-        Direction.right => {
-            snake.rectangle.x += snake_cell_size;
-        },
-    }
-
-    snakeTeleportOnEdge(snake);
 }
 
 pub fn main() void {
@@ -76,7 +84,7 @@ pub fn main() void {
 
     while (!ray.WindowShouldClose()) {
         // tick
-        snakeTick(&snake);
+        snake.tick();
 
         // render
         ray.BeginDrawing();
@@ -84,6 +92,6 @@ pub fn main() void {
 
         ray.ClearBackground(ray.BLACK);
 
-        ray.DrawRectangleRec(snake.rectangle, snake.color);
+        snake.render();
     }
 }
