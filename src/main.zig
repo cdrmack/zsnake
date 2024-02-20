@@ -59,6 +59,32 @@ const Snake = struct {
     fn render(self: *Snake) void {
         ray.DrawRectangleRec(self.rectangle, self.color);
     }
+
+    fn move(self: *Snake, direction: Direction) void {
+        self.direction = direction;
+    }
+
+    fn input(self: *Snake) void {
+        if (ray.IsKeyDown(ray.KEY_RIGHT)) {
+            self.move(Direction.right);
+            return;
+        }
+
+        if (ray.IsKeyDown(ray.KEY_LEFT)) {
+            self.move(Direction.left);
+            return;
+        }
+
+        if (ray.IsKeyDown(ray.KEY_UP)) {
+            self.move(Direction.up);
+            return;
+        }
+
+        if (ray.IsKeyDown(ray.KEY_DOWN)) {
+            self.move(Direction.down);
+            return;
+        }
+    }
 };
 
 fn makeRectangle(x: f32, y: f32, width: f32, height: f32) ray.Rectangle {
@@ -83,6 +109,9 @@ pub fn main() void {
     };
 
     while (!ray.WindowShouldClose()) {
+        // input
+        snake.input();
+
         // tick
         snake.tick();
 
