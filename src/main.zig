@@ -60,8 +60,45 @@ const Snake = struct {
         ray.DrawRectangleRec(self.rectangle, self.color);
     }
 
+    fn canChangeDirection(self: *Snake, direction: Direction) bool {
+        switch (self.direction) {
+            Direction.up => {
+                if (direction == Direction.down) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            Direction.down => {
+                if (direction == Direction.up) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            Direction.left => {
+                if (direction == Direction.right) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            Direction.right => {
+                if (direction == Direction.left) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+        }
+    }
+
     fn move(self: *Snake, direction: Direction) void {
-        self.direction = direction;
+        if (self.canChangeDirection(direction)) {
+            self.direction = direction;
+        } else {
+            ray.TraceLog(ray.LOG_INFO, "Cannot set that direction!");
+        }
     }
 
     fn input(self: *Snake) void {
