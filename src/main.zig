@@ -39,16 +39,16 @@ const Snake = struct {
 
     fn tick(self: *Snake) void {
         switch (self.direction) {
-            Direction.up => {
+            .up => {
                 self.rectangle.y -= snake_cell_size;
             },
-            Direction.down => {
+            .down => {
                 self.rectangle.y += snake_cell_size;
             },
-            Direction.left => {
+            .left => {
                 self.rectangle.x -= snake_cell_size;
             },
-            Direction.right => {
+            .right => {
                 self.rectangle.x += snake_cell_size;
             },
         }
@@ -62,29 +62,29 @@ const Snake = struct {
 
     fn canChangeDirection(self: *Snake, direction: Direction) bool {
         switch (self.direction) {
-            Direction.up => {
-                if (direction == Direction.down) {
+            .up => {
+                if (direction == .down) {
                     return false;
                 } else {
                     return true;
                 }
             },
-            Direction.down => {
-                if (direction == Direction.up) {
+            .down => {
+                if (direction == .up) {
                     return false;
                 } else {
                     return true;
                 }
             },
-            Direction.left => {
-                if (direction == Direction.right) {
+            .left => {
+                if (direction == .right) {
                     return false;
                 } else {
                     return true;
                 }
             },
-            Direction.right => {
-                if (direction == Direction.left) {
+            .right => {
+                if (direction == .left) {
                     return false;
                 } else {
                     return true;
@@ -103,22 +103,22 @@ const Snake = struct {
 
     fn input(self: *Snake) void {
         if (ray.IsKeyDown(ray.KEY_RIGHT)) {
-            self.move(Direction.right);
+            self.move(.right);
             return;
         }
 
         if (ray.IsKeyDown(ray.KEY_LEFT)) {
-            self.move(Direction.left);
+            self.move(.left);
             return;
         }
 
         if (ray.IsKeyDown(ray.KEY_UP)) {
-            self.move(Direction.up);
+            self.move(.up);
             return;
         }
 
         if (ray.IsKeyDown(ray.KEY_DOWN)) {
-            self.move(Direction.down);
+            self.move(.down);
             return;
         }
     }
@@ -141,7 +141,7 @@ pub fn main() void {
 
     var snake = Snake{
         .rectangle = makeRectangle(50, 50, snake_cell_size, snake_cell_size),
-        .direction = Direction.down,
+        .direction = .down,
         .color = ray.GREEN,
     };
 
