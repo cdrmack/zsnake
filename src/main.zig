@@ -15,11 +15,11 @@ fn makeRectangle(x: f32, y: f32, width: f32, height: f32) ray.Rectangle {
     };
 }
 
+const TickTargetDuration: f32 = 0.5; // 2 frames per second
+
 pub fn main() void {
     ray.InitWindow(Window.screen_width, Window.screen_height, "zsnake");
     defer ray.CloseWindow();
-
-    ray.SetTargetFPS(60);
 
     var snake = Snake.Snake{
         .rectangle = makeRectangle(50, 50, Snake.snake_cell_size, Snake.snake_cell_size),
@@ -27,19 +27,23 @@ pub fn main() void {
         .color = ray.GREEN,
     };
 
+    var delta_time: f32 = TickTargetDuration;
+
     while (!ray.WindowShouldClose()) {
-        // input
-        snake.input();
+        while (delta_time < TickTargetDuration) {
+            snake.input();
 
-        // tick
+            // render
+            ray.BeginDrawing();
+            defer ray.EndDrawing();
+
+            ray.ClearBackground(ray.BLACK);
+            snake.render();
+
+            delta_time += ray.GetFrameTime();
+        }
+
         snake.tick();
-
-        // render
-        ray.BeginDrawing();
-        defer ray.EndDrawing();
-
-        ray.ClearBackground(ray.BLACK);
-
-        snake.render();
+        delta_time = ray.GetFrameTime();
     }
 }
