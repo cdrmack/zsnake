@@ -5,6 +5,7 @@ const ray = @cImport({
 
 const Snake = @import("snake.zig");
 const Window = @import("window.zig");
+const Apple = @import("apple.zig");
 
 fn makeRectangle(x: f32, y: f32, width: f32, height: f32) ray.Rectangle {
     return ray.Rectangle{
@@ -27,6 +28,12 @@ pub fn main() void {
         .color = ray.GREEN,
     };
 
+    // TODO: make apple position random
+    var apple = Apple.Apple{
+        .rectangle = makeRectangle(200, 200, Snake.snake_cell_size, Snake.snake_cell_size),
+        .color = ray.RED,
+    };
+
     var delta_time: f32 = TickTargetDuration;
 
     while (!ray.WindowShouldClose()) {
@@ -39,6 +46,7 @@ pub fn main() void {
 
             ray.ClearBackground(ray.BLACK);
             snake.render();
+            apple.render();
 
             delta_time += ray.GetFrameTime();
         }
