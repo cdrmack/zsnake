@@ -15,6 +15,10 @@ pub const Game = struct {
 
     pub fn tick(self: *Game) void {
         self.snake.tick();
+
+        if (ray.CheckCollisionRecs(self.snake.rectangle, self.apple.rectangle)) {
+            self.apple.moveToRandomLocation();
+        }
     }
 
     pub fn render(self: *Game) void {

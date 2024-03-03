@@ -8,7 +8,7 @@ const Game = @import("game.zig");
 const Snake = @import("snake.zig");
 const Apple = @import("apple.zig");
 
-const tick_target_duration: f32 = 0.5; // 2 frames per second
+const tick_target_duration: f32 = 0.1; // 2 frames per second
 
 fn makeRectangle(x: f32, y: f32, width: f32, height: f32) ray.Rectangle {
     return ray.Rectangle{
@@ -26,11 +26,12 @@ fn initGame() Game.Game {
         .color = ray.GREEN,
     };
 
-    // TODO: make apple position random
-    const apple = Apple.Apple{
-        .rectangle = makeRectangle(200, 200, Snake.snake_cell_size, Snake.snake_cell_size),
+    var apple = Apple.Apple{
+        .rectangle = makeRectangle(0, 0, Snake.snake_cell_size, Snake.snake_cell_size),
         .color = ray.RED,
     };
+
+    apple.moveToRandomLocation();
 
     return Game.Game{
         .snake = snake,
