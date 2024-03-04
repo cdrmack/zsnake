@@ -36,10 +36,11 @@ fn initGame() Game.Game {
     return Game.Game{
         .snake = snake,
         .apple = apple,
+        .score = 0,
     };
 }
 
-pub fn main() void {
+pub fn main() !void {
     ray.InitWindow(Window.screen_width, Window.screen_height, "zsnake");
     defer ray.CloseWindow();
 
@@ -47,11 +48,15 @@ pub fn main() void {
 
     var game = initGame();
 
+    var score_buffer: [20]u8 = undefined;
     while (!ray.WindowShouldClose()) {
         while (delta_time < tick_target_duration) {
             game.input();
             game.render();
             delta_time += ray.GetFrameTime();
+
+            const score_string: [:0]u8 = try std.fmt.bufPrintZ(&score_buffer, "Score: {d}", .{game.score});
+            ray.DrawText(score_string.ptr, 10, Window.screen_height - 34, 24, ray.WHITE);
         }
 
         game.tick();

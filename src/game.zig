@@ -8,6 +8,7 @@ const Apple = @import("apple.zig");
 pub const Game = struct {
     snake: Snake.Snake,
     apple: Apple.Apple,
+    score: u32,
 
     pub fn input(self: *Game) void {
         self.snake.input();
@@ -18,6 +19,7 @@ pub const Game = struct {
 
         if (ray.CheckCollisionRecs(self.snake.rectangle, self.apple.rectangle)) {
             self.apple.moveToRandomLocation();
+            self.score += 1;
         }
     }
 
