@@ -16,8 +16,8 @@ pub const arena_max_x = arena_top_right.x - snake_cell_size;
 pub const arena_min_y = arena_top_left.y;
 pub const arena_max_y = arena_bottom_right.y - snake_cell_size;
 
-// Header is used to display current score
-pub const header_height = 40;
+// Header is used to display the current score
+pub const header_height = 2 * margin;
 
 // Margin is the distance between window and arena borders
 pub const margin = 20;

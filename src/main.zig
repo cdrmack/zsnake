@@ -63,7 +63,7 @@ pub fn main() !void {
 
     const score_x = 10;
     const score_y = 10;
-    const score_font_size = 30;
+    const score_font_size = Consts.margin;
 
     while (!ray.WindowShouldClose()) {
         while (delta_time < tick_target_duration) {
