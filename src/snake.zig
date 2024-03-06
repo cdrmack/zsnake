@@ -2,9 +2,7 @@ const ray = @cImport({
     @cInclude("raylib.h");
 });
 
-const Window = @import("window.zig");
-
-pub const snake_cell_size = 10;
+const Consts = @import("consts.zig");
 
 const Direction = enum { up, down, left, right };
 
@@ -14,23 +12,23 @@ pub const Snake = struct {
     color: ray.Color,
 
     fn teleportOnEdge(self: *Snake) void {
-        if (self.rectangle.y < 0) {
-            self.rectangle.y = Window.screen_height;
+        if (self.rectangle.y < Consts.arena_min_y) {
+            self.rectangle.y = Consts.arena_max_y;
             return;
         }
 
-        if (self.rectangle.x < 0) {
-            self.rectangle.x = Window.screen_width;
+        if (self.rectangle.x < Consts.arena_min_x) {
+            self.rectangle.x = Consts.arena_max_x;
             return;
         }
 
-        if (self.rectangle.y > Window.screen_height) {
-            self.rectangle.y = 0;
+        if (self.rectangle.y > Consts.arena_max_y) {
+            self.rectangle.y = Consts.arena_min_y;
             return;
         }
 
-        if (self.rectangle.x > Window.screen_width) {
-            self.rectangle.x = 0;
+        if (self.rectangle.x > Consts.arena_max_x) {
+            self.rectangle.x = Consts.arena_min_x;
             return;
         }
     }
@@ -38,16 +36,16 @@ pub const Snake = struct {
     pub fn tick(self: *Snake) void {
         switch (self.direction) {
             .up => {
-                self.rectangle.y -= snake_cell_size;
+                self.rectangle.y -= Consts.snake_cell_size;
             },
             .down => {
-                self.rectangle.y += snake_cell_size;
+                self.rectangle.y += Consts.snake_cell_size;
             },
             .left => {
-                self.rectangle.x -= snake_cell_size;
+                self.rectangle.x -= Consts.snake_cell_size;
             },
             .right => {
-                self.rectangle.x += snake_cell_size;
+                self.rectangle.x += Consts.snake_cell_size;
             },
         }
 
