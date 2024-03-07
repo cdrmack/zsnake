@@ -8,7 +8,7 @@ const Snake = @import("snake.zig");
 const Apple = @import("apple.zig");
 
 snake: Snake.Snake,
-apple: Apple.Apple,
+apple: Apple,
 score: u32,
 
 pub fn input(self: *Self) void {

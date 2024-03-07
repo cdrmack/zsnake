@@ -26,7 +26,7 @@ fn initGame() Game {
         .color = ray.GREEN,
     };
 
-    var apple = Apple.Apple{
+    var apple = Apple{
         .rectangle = makeRectangle(0, 0, Consts.snake_cell_size, Consts.snake_cell_size),
         .color = ray.RED,
     };
