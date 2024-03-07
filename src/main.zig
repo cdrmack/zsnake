@@ -20,7 +20,7 @@ fn makeRectangle(x: f32, y: f32, width: f32, height: f32) ray.Rectangle {
 }
 
 fn initGame() Game {
-    const snake = Snake.Snake{
+    const snake = Snake{
         .rectangle = makeRectangle(50, 50, Consts.snake_cell_size, Consts.snake_cell_size),
         .direction = .down,
         .color = ray.GREEN,

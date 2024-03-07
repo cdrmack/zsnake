@@ -7,7 +7,7 @@ const ray = @cImport({
 const Snake = @import("snake.zig");
 const Apple = @import("apple.zig");
 
-snake: Snake.Snake,
+snake: Snake,
 apple: Apple,
 score: u32,
 
