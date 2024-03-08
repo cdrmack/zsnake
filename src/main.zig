@@ -11,12 +11,7 @@ const Apple = @import("apple.zig");
 const tick_target_duration: f32 = 0.1; // 10 frames per second
 
 fn initGame() Game {
-    const snake = Snake{
-        .rectangle = ray.Rectangle{ .x = 50, .y = 50, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size },
-        .direction = .down,
-        .color = ray.GREEN,
-    };
-
+    const snake = Snake.init();
     var apple = Apple.init();
 
     apple.moveToRandomLocation();

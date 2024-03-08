@@ -12,6 +12,14 @@ rectangle: ray.Rectangle,
 direction: Direction,
 color: ray.Color,
 
+pub fn init() Self {
+    return Self{
+        .rectangle = ray.Rectangle{ .x = 50, .y = 50, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size },
+        .direction = .down,
+        .color = ray.GREEN,
+    };
+}
+
 fn teleportOnEdge(self: *Self) void {
     if (self.rectangle.y < Consts.arena_min_y) {
         self.rectangle.y = Consts.arena_max_y;
