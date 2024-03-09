@@ -10,19 +10,6 @@ const Apple = @import("apple.zig");
 
 const tick_target_duration: f32 = 0.1; // 10 frames per second
 
-fn initGame() Game {
-    const snake = Snake.init();
-    var apple = Apple.init();
-
-    apple.moveToRandomLocation();
-
-    return Game{
-        .snake = snake,
-        .apple = apple,
-        .score = 0,
-    };
-}
-
 fn renderBorder() void {
     // top
     ray.DrawLineV(Consts.arena_top_left, Consts.arena_top_right, ray.BLUE);
@@ -40,7 +27,7 @@ pub fn main() !void {
 
     var delta_time: f32 = tick_target_duration;
 
-    var game = initGame();
+    var game = Game.init();
 
     var score_buffer: [20]u8 = undefined;
 

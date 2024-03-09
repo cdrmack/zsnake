@@ -11,6 +11,19 @@ snake: Snake,
 apple: Apple,
 score: u32,
 
+pub fn init() Self {
+    const snake = Snake.init();
+    var apple = Apple.init();
+
+    apple.moveToRandomLocation();
+
+    return Self{
+        .snake = snake,
+        .apple = apple,
+        .score = 0,
+    };
+}
+
 pub fn input(self: *Self) void {
     self.snake.input();
 }
