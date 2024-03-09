@@ -4,6 +4,7 @@ const ray = @cImport({
     @cInclude("raylib.h");
 });
 
+const Consts = @import("consts.zig");
 const Snake = @import("snake.zig");
 const Apple = @import("apple.zig");
 
@@ -37,12 +38,24 @@ pub fn tick(self: *Self) void {
     }
 }
 
+fn renderBorder() void {
+    // top
+    ray.DrawLineV(Consts.arena_top_left, Consts.arena_top_right, ray.BLUE);
+    // bottom
+    ray.DrawLineV(Consts.arena_bottom_left, Consts.arena_bottom_right, ray.BLUE);
+    // left
+    ray.DrawLineV(Consts.arena_top_left, Consts.arena_bottom_left, ray.BLUE);
+    // right
+    ray.DrawLineV(Consts.arena_top_right, Consts.arena_bottom_right, ray.BLUE);
+}
+
 pub fn render(self: *Self) void {
     ray.BeginDrawing();
     defer ray.EndDrawing();
 
     self.snake.render();
     self.apple.render();
+    renderBorder();
 
     ray.ClearBackground(ray.BLACK);
 }

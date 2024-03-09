@@ -5,21 +5,8 @@ const ray = @cImport({
 
 const Consts = @import("consts.zig");
 const Game = @import("game.zig");
-const Snake = @import("snake.zig");
-const Apple = @import("apple.zig");
 
 const tick_target_duration: f32 = 0.1; // 10 frames per second
-
-fn renderBorder() void {
-    // top
-    ray.DrawLineV(Consts.arena_top_left, Consts.arena_top_right, ray.BLUE);
-    // bottom
-    ray.DrawLineV(Consts.arena_bottom_left, Consts.arena_bottom_right, ray.BLUE);
-    // left
-    ray.DrawLineV(Consts.arena_top_left, Consts.arena_bottom_left, ray.BLUE);
-    // right
-    ray.DrawLineV(Consts.arena_top_right, Consts.arena_bottom_right, ray.BLUE);
-}
 
 pub fn main() !void {
     ray.InitWindow(Consts.screen_width, Consts.screen_height, "zsnake");
@@ -39,7 +26,6 @@ pub fn main() !void {
         while (delta_time < tick_target_duration) {
             game.input();
             game.render();
-            renderBorder();
             delta_time += ray.GetFrameTime();
 
             const score_string: [:0]u8 = try std.fmt.bufPrintZ(&score_buffer, "Score: {d}", .{game.score});
