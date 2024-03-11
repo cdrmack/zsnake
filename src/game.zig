@@ -14,8 +14,8 @@ score: u32,
 
 pub fn init() Self {
     const snake = Snake.init();
-    var apple = Apple.init();
 
+    var apple = Apple.init();
     apple.moveToRandomLocation();
 
     return Self{
@@ -32,9 +32,10 @@ pub fn input(self: *Self) void {
 pub fn tick(self: *Self) void {
     self.snake.tick();
 
-    if (ray.CheckCollisionRecs(self.snake.rectangle, self.apple.rectangle)) {
+    if (ray.CheckCollisionRecs(self.snake.head.rectangle, self.apple.rectangle)) {
         self.apple.moveToRandomLocation();
         self.score += 1;
+        //try self.snake.grow();
     }
 }
 

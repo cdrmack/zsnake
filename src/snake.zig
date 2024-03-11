@@ -1,5 +1,6 @@
 const Self = @This();
 
+const std = @import("std");
 const ray = @cImport({
     @cInclude("raylib.h");
 });
@@ -8,53 +9,90 @@ const Consts = @import("consts.zig");
 
 const Direction = enum { up, down, left, right };
 
-rectangle: ray.Rectangle,
+pub const SnakeCell = struct { // tmp pub
+    previous: ?*SnakeCell,
+    next: ?*SnakeCell,
+    rectangle: ray.Rectangle,
+};
+
+head: SnakeCell,
+last: ?*SnakeCell,
 direction: Direction,
 color: ray.Color,
 
+// pub fn grow(self: *Self) !void {
+//     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+//     defer arena.deinit();
+
+//     const allocator = arena.allocator();
+
+//     var new_cell = try allocator.create(SnakeCell);
+//     new_cell.previous = self.last;
+//     new_cell.next = null;
+//     new_cell.rectangle = ray.Rectangle{ .x = 200, .y = 200, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size };
+
+//     self.last.?.next = new_cell;
+//     self.last = new_cell;
+// }
+
 pub fn init() Self {
     return Self{
-        .rectangle = ray.Rectangle{ .x = 50, .y = 50, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size },
+        .head = SnakeCell{ .previous = null, .next = null, .rectangle = ray.Rectangle{ .x = 50, .y = 150, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size } },
+        .last = null, // TODO: how to get address of .head here?
         .direction = .down,
         .color = ray.GREEN,
     };
 }
 
 fn teleportOnEdge(self: *Self) void {
-    if (self.rectangle.y < Consts.arena_min_y) {
-        self.rectangle.y = Consts.arena_max_y;
+    if (self.head.rectangle.y < Consts.arena_min_y) {
+        self.head.rectangle.y = Consts.arena_max_y;
         return;
     }
 
-    if (self.rectangle.x < Consts.arena_min_x) {
-        self.rectangle.x = Consts.arena_max_x;
+    if (self.head.rectangle.x < Consts.arena_min_x) {
+        self.head.rectangle.x = Consts.arena_max_x;
         return;
     }
 
-    if (self.rectangle.y > Consts.arena_max_y) {
-        self.rectangle.y = Consts.arena_min_y;
+    if (self.head.rectangle.y > Consts.arena_max_y) {
+        self.head.rectangle.y = Consts.arena_min_y;
         return;
     }
 
-    if (self.rectangle.x > Consts.arena_max_x) {
-        self.rectangle.x = Consts.arena_min_x;
+    if (self.head.rectangle.x > Consts.arena_max_x) {
+        self.head.rectangle.x = Consts.arena_min_x;
         return;
     }
 }
 
+fn updateLocations(self: *Self) void {
+    var CurrentCell: ?*SnakeCell = self.last;
+
+    while (CurrentCell) |value| {
+        if (value.previous) |previous_cell| {
+            value.rectangle = previous_cell.rectangle;
+        }
+
+        CurrentCell = CurrentCell.?.previous;
+    }
+}
+
 pub fn tick(self: *Self) void {
+    updateLocations(self);
+
     switch (self.direction) {
         .up => {
-            self.rectangle.y -= Consts.snake_cell_size;
+            self.head.rectangle.y -= Consts.snake_cell_size;
         },
         .down => {
-            self.rectangle.y += Consts.snake_cell_size;
+            self.head.rectangle.y += Consts.snake_cell_size;
         },
         .left => {
-            self.rectangle.x -= Consts.snake_cell_size;
+            self.head.rectangle.x -= Consts.snake_cell_size;
         },
         .right => {
-            self.rectangle.x += Consts.snake_cell_size;
+            self.head.rectangle.x += Consts.snake_cell_size;
         },
     }
 
@@ -62,7 +100,15 @@ pub fn tick(self: *Self) void {
 }
 
 pub fn render(self: *Self) void {
-    ray.DrawRectangleRec(self.rectangle, self.color);
+    // head
+    ray.DrawRectangleRec(self.head.rectangle, self.color);
+
+    // body
+    var CurrentCell: ?*SnakeCell = self.head.next;
+    while (CurrentCell != null) {
+        ray.DrawRectangleRec(CurrentCell.?.*.rectangle, self.color);
+        CurrentCell = CurrentCell.?.*.next;
+    }
 }
 
 fn canChangeDirection(self: *Self, direction: Direction) bool {
