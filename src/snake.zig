@@ -9,36 +9,36 @@ const Consts = @import("consts.zig");
 
 const Direction = enum { up, down, left, right };
 
-pub const SnakeCell = struct { // tmp pub
+const SnakeCell = struct {
     previous: ?*SnakeCell,
     next: ?*SnakeCell,
     rectangle: ray.Rectangle,
 };
 
 head: SnakeCell,
-last: ?*SnakeCell,
+last: *SnakeCell,
 direction: Direction,
 color: ray.Color,
 
-// pub fn grow(self: *Self) !void {
-//     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-//     defer arena.deinit();
+pub fn grow(self: *Self) !void {
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    //defer arena.deinit(); // TODO: when should I deinit?
 
-//     const allocator = arena.allocator();
+    const allocator = arena.allocator();
 
-//     var new_cell = try allocator.create(SnakeCell);
-//     new_cell.previous = self.last;
-//     new_cell.next = null;
-//     new_cell.rectangle = ray.Rectangle{ .x = 200, .y = 200, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size };
+    var new_cell = try allocator.create(SnakeCell);
+    new_cell.previous = self.last;
+    new_cell.next = null;
+    new_cell.rectangle = self.last.rectangle;
 
-//     self.last.?.next = new_cell;
-//     self.last = new_cell;
-// }
+    self.last.next = new_cell;
+    self.last = new_cell;
+}
 
 pub fn init() Self {
     return Self{
         .head = SnakeCell{ .previous = null, .next = null, .rectangle = ray.Rectangle{ .x = 50, .y = 150, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size } },
-        .last = null, // TODO: how to get address of .head here?
+        .last = undefined, // TODO: how to get address of .head here?
         .direction = .down,
         .color = ray.GREEN,
     };
@@ -100,14 +100,11 @@ pub fn tick(self: *Self) void {
 }
 
 pub fn render(self: *Self) void {
-    // head
-    ray.DrawRectangleRec(self.head.rectangle, self.color);
+    var CurrentCell: ?*SnakeCell = &self.head;
 
-    // body
-    var CurrentCell: ?*SnakeCell = self.head.next;
-    while (CurrentCell != null) {
-        ray.DrawRectangleRec(CurrentCell.?.*.rectangle, self.color);
-        CurrentCell = CurrentCell.?.*.next;
+    while (CurrentCell) |value| {
+        ray.DrawRectangleRec(value.rectangle, self.color);
+        CurrentCell = value.next;
     }
 }
 

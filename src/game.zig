@@ -29,13 +29,13 @@ pub fn input(self: *Self) void {
     self.snake.input();
 }
 
-pub fn tick(self: *Self) void {
+pub fn tick(self: *Self) !void {
     self.snake.tick();
 
     if (ray.CheckCollisionRecs(self.snake.head.rectangle, self.apple.rectangle)) {
         self.apple.moveToRandomLocation();
         self.score += 1;
-        //try self.snake.grow();
+        try self.snake.grow();
     }
 }
 
