@@ -19,14 +19,10 @@ head: SnakeCell,
 last: *SnakeCell,
 direction: Direction,
 color: ray.Color,
+allocator: std.mem.Allocator,
 
 pub fn grow(self: *Self) !void {
-    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
-    //defer arena.deinit(); // TODO: when should I deinit?
-
-    const allocator = arena.allocator();
-
-    var new_cell = try allocator.create(SnakeCell);
+    var new_cell = try self.allocator.create(SnakeCell);
     new_cell.previous = self.last;
     new_cell.next = null;
     new_cell.rectangle = self.last.rectangle;
@@ -35,12 +31,13 @@ pub fn grow(self: *Self) !void {
     self.last = new_cell;
 }
 
-pub fn init() Self {
+pub fn init(allocator: std.mem.Allocator) Self {
     return Self{
         .head = SnakeCell{ .previous = null, .next = null, .rectangle = ray.Rectangle{ .x = 50, .y = 150, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size } },
         .last = undefined, // TODO: how to get address of .head here?
         .direction = .down,
         .color = ray.GREEN,
+        .allocator = allocator,
     };
 }
 

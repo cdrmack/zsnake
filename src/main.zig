@@ -14,7 +14,10 @@ pub fn main() !void {
 
     var delta_time: f32 = tick_target_duration;
 
-    var game = Game.init();
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
+
+    var game = Game.init(arena.allocator());
     game.snake.last = &game.snake.head; // TODO: how to do this inside Snake.init()?
 
     var score_buffer: [20]u8 = undefined;

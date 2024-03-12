@@ -1,5 +1,6 @@
 const Self = @This();
 
+const std = @import("std");
 const ray = @cImport({
     @cInclude("raylib.h");
 });
@@ -12,8 +13,8 @@ snake: Snake,
 apple: Apple,
 score: u32,
 
-pub fn init() Self {
-    const snake = Snake.init();
+pub fn init(allocator: std.mem.Allocator) Self {
+    const snake = Snake.init(allocator);
 
     var apple = Apple.init();
     apple.moveToRandomLocation();
