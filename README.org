@@ -5,3 +5,5 @@ Minimalistic snake clone. Expects [[https://github.com/raysan5/raylib][raylib]] 
 #+end_src
 
 [[./zsnake.png]]
+
+Dynamic allocation might be an overkill here. The main reason why I have decided to use it anyway was learning.
