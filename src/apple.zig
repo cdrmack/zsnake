@@ -6,15 +6,8 @@ const ray = @cImport({
 
 const Consts = @import("consts.zig");
 
-rectangle: ray.Rectangle,
-color: ray.Color,
-
-pub fn init() Self {
-    return Self{
-        .rectangle = ray.Rectangle{ .x = 0, .y = 0, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size },
-        .color = ray.RED,
-    };
-}
+rectangle: ray.Rectangle = ray.Rectangle{ .x = 0, .y = 0, .width = Consts.snake_cell_size, .height = Consts.snake_cell_size },
+color: ray.Color = ray.RED,
 
 pub fn render(self: *Self) void {
     ray.DrawRectangleRec(self.rectangle, self.color);

@@ -16,7 +16,7 @@ score: u32,
 pub fn init(allocator: std.mem.Allocator) Self {
     const snake = Snake.init(allocator);
 
-    var apple = Apple.init();
+    var apple = Apple{};
     apple.moveToRandomLocation();
 
     return Self{
