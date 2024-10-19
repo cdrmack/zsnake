@@ -6,17 +6,19 @@ pub fn build(b: *std.Build) void {
 
     const exe = b.addExecutable(.{
         .name = "zsnake",
-        .root_source_file = .{ .path = "src/main.zig" },
+        .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
     });
 
-    const raylib_dep = b.dependency("raylib", .{
-        .target = target,
-        .optimize = optimize,
-    });
+    exe.linkSystemLibrary("raylib");
 
-    exe.linkLibrary(raylib_dep.artifact("raylib"));
+    // const raylib_dep = b.dependency("raylib", .{
+    //     .target = target,
+    //     .optimize = optimize,
+    // });
+
+    // exe.linkLibrary(raylib_dep.artifact("raylib"));
 
     b.installArtifact(exe);
 
